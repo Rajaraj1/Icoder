@@ -19,3 +19,39 @@ findmax(a,b,c);
 dbms_output.put_line(c); 
 end; 
     
+    // The next one 
+    
+    CREATE OR REPLACE PACKAGE BODY c_package AS 
+   PROCEDURE addCustomer(c_id  detail.id%type, 
+      c_name detail.name%type, 
+        
+      c_addr  detail.address%type,   
+      c_sal   detail.salary%type) 
+   IS 
+   BEGIN 
+      INSERT INTO detail (id,name,address,salary) 
+         VALUES(c_id, c_name, c_addr, c_sal); 
+   END addCustomer; 
+    
+   PROCEDURE delCustomer(c_id   detail.id%type) IS 
+   BEGIN 
+      DELETE FROM detail 
+      WHERE id = c_id; 
+   END delCustomer;   
+    
+   PROCEDURE listCustomer IS 
+   CURSOR c_customers is 
+      SELECT  name FROM detail; 
+   TYPE c_list is TABLE OF detail.Name%type; 
+   name_list c_list := c_list(); 
+   counter integer :=0; 
+   BEGIN 
+      FOR n IN c_customers LOOP 
+      counter := counter +1; 
+      name_list.extend; 
+      name_list(counter) := n.name; 
+      dbms_output.put_line('Customer(' ||counter|| ')'||name_list(counter)); 
+      END LOOP; 
+   END listCustomer; 
+    
+END c_package; 
